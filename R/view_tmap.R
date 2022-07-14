@@ -740,16 +740,19 @@ view_tmap <- function(gp, shps=NULL, leaflet_id=1, showWarns=TRUE, gal = NULL, i
 		stop("Invalid control.position", call.=FALSE)
 	}
 	
-	if (length(bases) == 1 && !basename.specified) {
-		if (!is.na(overlays[1])) {
-			lf <- lf %>% addLayersControl(overlayGroups = unname(overlays), options = layersControlOptions(autoZIndex = TRUE), position=control.position)
+	if(!proxy) {
+		if (length(bases) == 1 && !basename.specified) {
+			if (!is.na(overlays[1])) {
+				lf <- lf %>% addLayersControl(overlayGroups = unname(overlays), options = layersControlOptions(autoZIndex = TRUE), position=control.position)
+			}
+		} else if (!is.na(overlays[1])) {
+			lf <- lf %>% addLayersControl(baseGroups=unname(bases), overlayGroups = unname(overlays), options = layersControlOptions(autoZIndex = TRUE), position=control.position)  
+		} else {
+			lf <- lf %>% addLayersControl(baseGroups=unname(bases), options = layersControlOptions(autoZIndex = TRUE), position=control.position)  
 		}
-	} else if (!is.na(overlays[1])) {
-		lf <- lf %>% addLayersControl(baseGroups=unname(bases), overlayGroups = unname(overlays), options = layersControlOptions(autoZIndex = TRUE), position=control.position)  
 	} else {
-		lf <- lf %>% addLayersControl(baseGroups=unname(bases), options = layersControlOptions(autoZIndex = TRUE), position=control.position)  
+		
 	}
-
 
 	if (gt$scale.show) {
 		u <- gt$shape.units$unit

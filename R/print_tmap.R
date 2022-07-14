@@ -64,7 +64,11 @@ print_tmap <- function(x, vp=NULL, return.asp=FALSE, mode=getOption("tmap.mode")
 				if (!is.null(typesList[[name]])) {
 					if (typesList[[name]] == "raster") {
 						lf <- lf %>% leaflet::removeImage(sort(unname(layerIds[[name]]))) %>%
-							leaflet::removeControl(legend)
+							leaflet::removeControl(legend) %>%
+							leafem::updateLayersControl(
+								# baseGroups=unname(bases), 
+								addOverlayGroups = unname(overlays), 
+								options = layersControlOptions(autoZIndex = TRUE))
 					} else if (typesList[[name]] %in% c("text")) {
 						lf <- lf %>% leaflet::removeMarker(sort(unname(layerIds[[name]]))) %>%
 							leaflet::removeControl(legend)
@@ -82,7 +86,9 @@ print_tmap <- function(x, vp=NULL, return.asp=FALSE, mode=getOption("tmap.mode")
 			attr(layerIds, "groups") <- unlist(groupsList, use.names = FALSE)
 			assign("layerIdsNew", layerIds, envir = .TMAP_CACHE)
 			
-			overlays <- if (length(groupsList) == 0) character(0) else intersect(overlays, unlist(groupsList, use.names = FALSE))
+			print(overlays)
+			# print(unlist(groupsList, use.names = FALSE))
+			#overlays <- if (length(groupsList) == 0) character(0) else intersect(overlays, unlist(groupsList, use.names = FALSE))
 			overlays_tiles <- if (length(groupsList) == 0) character(0) else intersect(overlays_tiles, unlist(groupsList, use.names = FALSE))
 			assign("overlays", overlays, envir = .TMAP_CACHE)
 			assign("overlays_tiles", overlays_tiles, envir = .TMAP_CACHE)

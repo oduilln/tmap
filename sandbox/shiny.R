@@ -24,6 +24,7 @@ ui <- fluidPage(
 	# Sidebar with a slider input for year of interest
 	sidebarLayout(
 		sidebarPanel(
+			actionButton("remove", "Remove Layer 401"),
 			selectInput("rastervar", "Raster variable", names(land)),
 			selectInput("polyvar", "Polygons variable", world_vars),
 			sliderInput("alpha", "Polygon alpha", min = 0, max = 1, value = .5),
@@ -55,7 +56,12 @@ server <- function(input, output, session) {
 			tm_symbols(col = "gold", size = years[1], zindex = 404) #, zindex = 403
 	})
 
-
+	observe({
+		input$remove
+		tmapProxy("tmap", session, {
+			tm_remove_layer(401)
+		})
+	})
 	
 	observe({
 		var <- input$rastervar
